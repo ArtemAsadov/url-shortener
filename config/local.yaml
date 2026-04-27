@@ -1,0 +1,7 @@
+env: "local" #local, dev, prod
+storage_path: ".storage/storage.db"
+driver_name: "sqlite3"
+http_server:
+  address: "localhost:8082"
+  timeout: 4s #Время на чтение или на отправку
+  idle_timeout: 60s #Время жизни с соединением

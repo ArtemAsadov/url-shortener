@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log/slog"
+	"net/http"
 	"os"
 	"url-shortener/internal/config"
 	"url-shortener/internal/http-server/handlers/url/save"
@@ -50,8 +51,21 @@ func main() {
 	router.Post("/url", save.New(log, storage))
 
 	//TODO: init run server
+	fmt.Println("Service is running ", slog.String("addres", cfg.Address))
+	srv := &http.Server{
+		Addr:         cfg.Address,
+		Handler:      router,
+		ReadTimeout:  cfg.HTTPServer.Timeout,
+		WriteTimeout: cfg.HTTPServer.Timeout,
+		IdleTimeout:  cfg.IdleTimeout,
+	}
 
-	fmt.Println("Service is running...")
+	//блокирующая функция
+	if err := srv.ListenAndServe(); err != nil {
+		log.Error("failed to start server")
+	}
+
+	log.Error("ЖОПА")
 }
 
 func setupLogger(env string) *slog.Logger {

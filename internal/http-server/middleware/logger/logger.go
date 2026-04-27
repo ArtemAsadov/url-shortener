@@ -9,17 +9,13 @@ import (
 )
 
 func New(log *slog.Logger) func(next http.Handler) http.Handler {
-	// ============================================
 	// ЭТАП 1: Вызывается ОДИН раз при старте приложения
-	// ============================================
 	log.Debug(">>> [MIDDLEWARE FACTORY] New() called",
 		slog.String("stage", "factory_init"),
 	)
 
 	return func(next http.Handler) http.Handler {
-		// ============================================
 		// ЭТАП 2: Вызывается ОДИН раз при сборке роутера
-		// ============================================
 		log.Debug(">>> [WRAPPER] Creating handler wrapper",
 			slog.String("stage", "wrapper_init"),
 			slog.String("next_handler_type", httpHandlerType(next)), // вспомогательная функция ниже
@@ -30,9 +26,7 @@ func New(log *slog.Logger) func(next http.Handler) http.Handler {
 		log.Info("logger middleware enabled", slog.String("stage", "wrapper_ready"))
 
 		fn := func(w http.ResponseWriter, r *http.Request) {
-			// ============================================
 			// ЭТАП 3: Вызывается НА КАЖДЫЙ запрос
-			// ============================================
 
 			// 3.1. Начало обработки запроса
 			log.Debug(">>> [REQUEST] Start processing",
@@ -96,9 +90,7 @@ func New(log *slog.Logger) func(next http.Handler) http.Handler {
 	}
 }
 
-// ============================================
 // ВСПОМОГАТЕЛЬНАЯ: чтобы видеть тип хендлера в логах
-// ============================================
 func httpHandlerType(h http.Handler) string {
 	if h == nil {
 		return "nil"
